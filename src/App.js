@@ -2,13 +2,13 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import axios from "axios";
+import { data } from "autoprefixer";
 
 const classes = {
-  body: "flex flex-wrap w-full h-screen  ",
-  // boxCard: "grid-cols-4	grid-template-columns: repeat(minmax( 1fr )); ",
-  wrapper: "grid grid-cols-4 gap-2 ",
-  lowWrap: "w-100 border-2 text-center items-center rounded-3xl mx-4 w-12/12",
-  // " border-2 mt-16 p-2 text-center w-12/12 items-center rounded-3xl mx-4 ",
+  body: "flex flex-wrap w-full h-screen",
+  wrapper: "",
+  lowWrap:
+    "border-2 mt-0 p-5 text-center min-w-full items-center rounded-3xl mx-2 ",
   title: "text-gray-800 text-l font-bold",
   description: (active) =>
     `my-6 ${active ? "text-red-900 font-medium" : "text-gray-800"}`,
@@ -20,41 +20,38 @@ const classes = {
 };
 
 const App = () => {
-  let [groupData, setGroupData] = React.useState([]);
+  let [groupData, setGroupData] = React.useState([[]]);
   useEffect(() => {
     async function fetchData() {
       const result = await axios.get("/countgroups");
-      setGroupData(result.data);
+      let arrSlide = [[]];
+      let index = 0;
+      result.data.forEach((element) => {
+        if (arrSlide[index].length < 8) {
+          arrSlide[index].push(element);
+        } else {
+          arrSlide[++index] = [];
+          arrSlide[index].push(element);
+        }
+      });
+      setGroupData(arrSlide);
     }
     fetchData();
-    const intervals = setInterval(() => fetchData(), 5000);
+    // const intervals = setInterval(() => fetchData(), 5000);
   }, []);
   return (
     <>
-      <div class="grid grid-cols-4 gap-2">
-        <div className="w-full" style={{ backgroundColor: "red" }}>
-          1
+      {groupData.map((datas, i) => (
+        <div className="w-full">
+          <div className="grid grid-cols-4 gap-4 p-8 auto-rows-auto">
+            {datas.map((data, i) => (
+              <Group key={data.id} groupdata={data} />
+            ))}
+          </div>
         </div>
-        <div className="w-full" style={{ backgroundColor: "green" }}>
-          2
-        </div>
-        <div className="w-full" style={{ backgroundColor: "blue" }}>
-          3
-        </div>
-        <div className="w-full" style={{ backgroundColor: "gray" }}>
-          4
-        </div>
-      </div>
-
+      ))}
       <div className={classes.body}>
-        {/* Header */}
-        {/* <div className={classes.boxCard}> */}
-        {console.log(groupData)}
-        {groupData.map((data) => {
-          return <Group key={data.id} groupdata={data} />;
-        })}
-        {/* </div> */}
-        {/* Footer */}
+        <div className={classes.boxCard}>{console.log(groupData)}</div>
       </div>
     </>
   );
@@ -70,7 +67,7 @@ const Group = (props) => {
       setResponseData(result.data);
     }
     fetchData2();
-    const intervals = setInterval(() => fetchData2(), 2000);
+    // const intervals = setInterval(() => fetchData2(), 2000);
   }, []);
 
   return (
