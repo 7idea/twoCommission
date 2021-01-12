@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import axios from "axios";
 import { data } from "autoprefixer";
+import Slider from "react-slick";
 
 const classes = {
   body: "flex flex-wrap w-full h-screen",
-  wrapper: "",
   lowWrap:
-    "border-2 mt-0 p-5 text-center min-w-full items-center rounded-3xl mx-2 ",
+    "border-2 mt-0 p-10 text-center w-full items-center rounded-3xl mx-2 ",
   title: "text-gray-800 text-l font-bold",
   description: (active) =>
     `my-6 ${active ? "text-red-900 font-medium" : "text-gray-800"}`,
@@ -17,6 +17,16 @@ const classes = {
   num: "w-1/2 text-5xl font-extrabold",
   hnum: "w-1/2 text-xl font-extralight mt-2 mb-4 font-thin",
   line: "w-full flex items-center p-2 ",
+};
+
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 200,
+  autoplaySpeed: 8000,
+  autoplay: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
 };
 
 const App = () => {
@@ -41,18 +51,20 @@ const App = () => {
   }, []);
   return (
     <>
-      {groupData.map((datas, i) => (
-        <div className="w-full">
-          <div className="grid grid-cols-4 gap-4 p-8 auto-rows-auto">
-            {datas.map((data, i) => (
-              <Group key={data.id} groupdata={data} />
-            ))}
+      <Slider {...settings} className={classes.body}>
+        {groupData.map((datas, i) => (
+          <div className="w-full">
+            <div className="grid grid-cols-4 gap-4 p-8 auto-rows-auto">
+              {datas.map((data, i) => (
+                <Group key={data.id} groupdata={data} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-      <div className={classes.body}>
+        ))}
+      </Slider>
+      {/* <div className={classes.body}>
         <div className={classes.boxCard}>{console.log(groupData)}</div>
-      </div>
+      </div> */}
     </>
   );
 };
@@ -71,7 +83,7 @@ const Group = (props) => {
   }, []);
 
   return (
-    <div className={classes.wrapper}>
+    <div>
       <div className={classes.lowWrap}>
         <img
           className="rounded-full w-28 mx-auto mt-8"
